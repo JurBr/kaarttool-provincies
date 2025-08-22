@@ -1,0 +1,28 @@
+{
+  "bedrijvigheid": [
+    "bedrijvigheid__% Maakindustrie",
+    "bedrijvigheid__% Kunststoffen",
+    "bedrijvigheid__% Consumptiegoederen",
+    "bedrijvigheid__% Bouw",
+    "bedrijvigheid__% Biomassa en voedsel"
+  ],
+  "r_strategie": [
+    "r_strategie__% R1 Rethink",
+    "r_strategie__% Reduce",
+    "r_strategie__% R3 Reuse",
+    "r_strategie__% R4 Repair",
+    "r_strategie__% R5 Recycle",
+    "r_strategie__% R6 Recover",
+    "r_strategie__% Overig"
+  ],
+  "instrumenten": [
+    "instrumenten__% Onderzoek",
+    "instrumenten__% Onderwijs",
+    "instrumenten__% Netwerk en informatie-uitwisseling",
+    "instrumenten__% Bedrijfs-ondersteuning en financiering",
+    "instrumenten__% Informatievoorziening",
+    "instrumenten__% Inkoop",
+    "instrumenten__% Wet- en regelgeving",
+    "instrumenten__% Ruimtelijke Ordening"
+  ]
+}
