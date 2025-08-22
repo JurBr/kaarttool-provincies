@@ -1,46 +1,25 @@
 <!DOCTYPE html>
 <html lang="nl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Kaarttool Circulaire Specialismen – Provincies</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <meta charset="UTF-8">
+  <title>Kaarttool Regionale Specialisatie Circulaire Innovatie</title>
+  <link rel="stylesheet" href="style.css">
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-  <link rel="stylesheet" href="./style.css" />
-</head>
-<body>
-  <header class="container">
-    <h1>Kaarttool Circulaire Specialismen – Provincies</h1>
-    <p>Filter op <b>groep</b> en kies de <b>indicator</b>. Klik in een provincie voor alle gegevens.</p>
-  </header>
-
-  <section class="controls container">
-    <label class="lbl">Groep</label>
-    <select id="groupSelect"></select>
-    <label class="lbl">Indicator</label>
-    <select id="metricSelect"></select>
-
-    <div class="spacer"></div>
-
-    <details id="overlayPanel">
-      <summary>Overlays (specialisatie-afbeeldingen)</summary>
-      <div id="overlayList" class="overlay-list">
-        <!-- Dynamisch gevuld. Voeg straks je overlays toe in data/overlays/ -->
-        <em>Geen overlays gevonden. Voeg bestanden toe in <code>data/overlays/</code>.</em>
-      </div>
-    </details>
-  </section>
-
-  <div id="map"></div>
-
-  <footer class="container">
-    <small>Bron: samengestelde provinciedataset. © Jur Braakman &amp; KIA&nbsp;CE-stijl.</small>
-  </footer>
-
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
-  <script src="./script.js"></script>
+</head>
+<body>
+  <div id="sidebar">
+    <h2>Kaarttool</h2>
+    <div class="legend">
+      <h3>Legenda</h3>
+      <div>Categorie: <select id="groupSelect"></select></div>
+      <div>Indicator: <select id="metricSelect"></select></div>
+      <div class="symbol"><span class="star">★</span> Campus</div>
+      <div id="overlayList"></div>
+    </div>
+  </div>
+  <div id="map"></div>
+  <script src="script.js"></script>
 </body>
 </html>
