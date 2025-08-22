@@ -4,7 +4,6 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png
   attribution: '&copy; OpenStreetMap contributors, © CARTO'
 }).addTo(map);
 
-
 let provincesLayer;
 let dataByProv = new Map();
 let groups = {};
@@ -19,7 +18,7 @@ const aliases = new Map([
 
 function loadCSV() {
   return new Promise((resolve) => {
-    Papa.parse('provincies_circulaire_dataset.csv', {
+    Papa.parse('./data/provincies_circulaire_dataset.csv', {
       header: true, download: true, dynamicTyping: true,
       complete: (results) => {
         results.data.forEach(row => {
@@ -36,13 +35,7 @@ function loadCSV() {
 async function loadGroups() {
   const res = await fetch('./data/metric_groups.json');
   groups = await res.json();
-  // friendly display names
-  const titles = {
-    bedrijvigheid: 'Bedrijvigheid',
-    r_strategie: 'R-strategie',
-    instrumenten: 'Instrumenten',
-    overig: 'Overig'
-  };
+  const titles = { bedrijvigheid:'Bedrijvigheid', r_strategie:'R-strategie', instrumenten:'Instrumenten', overig:'Overig' };
   const groupSelect = document.getElementById('groupSelect');
   Object.keys(groups).forEach(g => {
     const opt = document.createElement('option');
@@ -59,9 +52,8 @@ async function loadGroups() {
 }
 
 function prettifyMetric(key){
-  // show metric after prefix
   const name = key.includes('__') ? key.split('__')[1] : key;
-  return name.replaceAll('_',' ').replace(/\w/g, m => m.toUpperCase());
+  return name.replaceAll('_',' ').replace(/\b\w/g, m => m.toUpperCase());
 }
 
 function populateMetricSelect(){
@@ -85,7 +77,6 @@ function populateMetricSelect(){
 function kiaGreen(val, min, max){
   if (val == null || isNaN(val)) return '#f6fbf7'; // very light bg
   const t = (val - min) / (max - min || 1);
-  // white(246,251,247) -> dark green(14,87,53)
   const r = Math.round(246 + t * (14 - 246));
   const g = Math.round(251 + t * (87 - 251));
   const b = Math.round(247 + t * (53 - 247));
@@ -98,7 +89,14 @@ function numberOrDash(v){
 }
 
 function attachPopup(layer, provName){
-  const row = dataByProv.get(provName) || dataByProv.get(aliases.get(provName)) || [...dataByProv.keys()].find(k => aliases.get(k) === provName) && dataByProv.get([...dataByProv.keys()].find(k => aliases.get(k) === provName));
+  const row =
+    dataByProv.get(provName) ||
+    dataByProv.get(aliases.get(provName)) ||
+    ( (() => {
+        const k = [...dataByProv.keys()].find(k => aliases.get(k) === provName);
+        return k ? dataByProv.get(k) : null;
+      })() );
+
   if (!row) return;
   let html = `<div class="popup"><h3>${provName}</h3>`;
   const friendly = { bedrijvigheid:'Bedrijvigheid', r_strategie:'R-strategie', instrumenten:'Instrumenten', overig:'Overig' };
@@ -138,12 +136,21 @@ function updateChoropleth(){
 }
 
 function loadOverlays(){
-  // Optional: list files in ./data/overlays/index.json -> [{id,title,url,bounds:[[s,w],[n,e]]},...]
   fetch('./data/overlays/index.json')
     .then(r => r.json())
     .then(items => {
       const list = document.getElementById('overlayList');
       list.innerHTML='';
+      const sliderWrap = document.createElement('div');
+      sliderWrap.style.margin = '6px 0';
+      sliderWrap.innerHTML = `
+        <label style="font-size:12px">Transparantie</label>
+        <input id="overlayOpacity" type="range" min="20" max="100" value="65" />
+      `;
+      list.appendChild(sliderWrap);
+      const setOpacity = (v) => activeOverlays.forEach(o => o.layer.setOpacity(v/100));
+      sliderWrap.querySelector('#overlayOpacity').addEventListener('input', e => setOpacity(e.target.value));
+
       items.forEach(item => {
         const wrap = document.createElement('label');
         wrap.className = 'overlay-item';
@@ -174,8 +181,8 @@ function loadOverlays(){
 async function init(){
   await loadCSV();
   await loadGroups();
-  // Load provinces
-  fetch('.nl_provinces.geojson')
+
+  fetch('./data/nl_provinces.geojson')
     .then(r => r.json())
     .then(geojson => {
       provincesLayer = L.geoJSON(geojson, {
