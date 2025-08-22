@@ -1,7 +1,7 @@
 body {
-  margin: 0;
   font-family: 'Montserrat', sans-serif;
-  background: #f6fbf7;
+  margin: 0;
+  background: #f5f5f5;
 }
 
 #map {
@@ -9,60 +9,29 @@ body {
   height: 100vh;
 }
 
-.controls {
-  position: relative;
-  z-index: 1000;
-  top: 10px;
-  left: 10px;
-  background: #ffffffee;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.15);
-  font-size: 14px;
-}
-
-.controls select, .controls label {
-  display: block;
-  margin: 4px 0;
-}
-
-.overlay-item {
-  display: flex;
-  align-items: center;
-  font-size: 13px;
-  margin: 2px 0;
-}
-
-.overlay-item input {
-  margin-right: 6px;
-}
-
 .popup h3 {
-  margin: 0 0 6px 0;
+  margin: 0 0 4px 0;
   font-size: 16px;
-  color: #0e5735;
 }
 
 .popup table {
-  width: 100%;
+  font-size: 12px;
   border-collapse: collapse;
-  font-size: 13px;
 }
 
 .popup th {
   text-align: left;
-  padding-right: 6px;
-  font-weight: 600;
-  color: #444;
+  font-weight: 500;
+  padding-right: 8px;
 }
 
-.popup td {
-  text-align: right;
-  color: #222;
+.overlay-item {
+  display: block;
+  font-size: 13px;
+  margin: 4px 0;
 }
 
-.group {
-  margin-top: 8px;
-  font-weight: 600;
-  color: #0e5735;
+/* overlays mogen klikken niet blokkeren */
+.hotspot-overlay { 
+  pointer-events: none; 
 }
