@@ -106,12 +106,22 @@ function kiaGreen(val, min, max){
 function numberOrDash(v){ return (v==null || isNaN(v)) ? '–' : Number(v).toLocaleString('nl-NL'); }
 
 function rowForProv(nameRaw){
-  // 1) directe match
+  // 1) directe match (exacte sleutel zoals in CSV)
   if (dataByProv.has(nameRaw)) return dataByProv.get(nameRaw);
-  // 2) genormaliseerde match + alias
-  let n = norm(nameRaw);
-  if (alias.has(n)) n = alias.get(n); // map naar doelnaam (norm key)
-  return dataByProvNorm.get(n) || null;
+
+  // 2) genormaliseerde match (accents eraf, lower, koppeltekens -> spatie)
+  const n = norm(nameRaw);
+  if (dataByProvNorm.get(n)) return dataByProvNorm.get(n);
+
+  // 3) alias vooruit: bv. "fryslan" -> "friesland"
+  const fwd = alias.get(n);
+  if (fwd && dataByProvNorm.get(fwd)) return dataByProvNorm.get(fwd);
+
+  // 4) alias achteruit: zoek alias die naar onze genormaliseerde naam wijst
+  for (const [src, dst] of alias.entries()){
+    if (dst === n && dataByProvNorm.get(src)) return dataByProvNorm.get(src);
+  }
+  return null;
 }
 
 function attachPopup(layer, provName){
