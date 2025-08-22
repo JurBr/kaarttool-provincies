@@ -17,7 +17,7 @@ let currentGroup = null;
 let currentMetric = null;
 
 // campussen dataset
-const SHEET_CSV_URL = "REPLACE_WITH_GOOGLE_SHEET_CSV"; // <--- vul hier je Google Sheet CSV-link in
+const SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1YtBM1pHBlUrR9o_cSobboJ4Pi_WAnawSXw4uWkHRzMg/edit?usp=sharing"; // <--- vul hier je Google Sheet CSV-link in
 
 function loadCSV() {
   return new Promise((resolve) => {
