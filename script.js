@@ -1,8 +1,9 @@
 // v2: grouped filters, Montserrat + KIA-CE palette, no legend, click popup with all metrics
 const map = L.map('map', { zoomControl: true }).setView([52.2, 5.3], 7);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '&copy; OpenStreetMap contributors'
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+  attribution: '&copy; OpenStreetMap contributors, © CARTO'
 }).addTo(map);
+
 
 let provincesLayer;
 let dataByProv = new Map();
