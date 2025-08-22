@@ -175,7 +175,7 @@ async function init(){
   await loadCSV();
   await loadGroups();
   // Load provinces
-  fetch('./data/nl_provinces.geojson')
+  fetch('.nl_provinces.geojson')
     .then(r => r.json())
     .then(geojson => {
       provincesLayer = L.geoJSON(geojson, {
