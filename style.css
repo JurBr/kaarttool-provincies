@@ -1,0 +1,41 @@
+
+:root{
+  --bg: #f6faf8;
+  --card: #ffffff;
+  --ink: #0d1b12;
+  --muted: #5a6a61;
+  --stroke: #dfe7e3;
+  --accent: #1e7f4d; /* KIA-CE groene accent */
+}
+*{ box-sizing: border-box; }
+html, body { height: 100%; margin: 0; background: var(--bg); color: var(--ink); font-family: 'Montserrat', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; }
+h1 { font-size: 20px; margin: 0 0 6px; font-weight: 700; letter-spacing: .2px; }
+p { margin: 0; color: var(--muted); }
+.container{ max-width: 1100px; padding: 16px; margin: 0 auto; }
+
+.controls{
+  display: flex; gap: 10px; align-items: center; background: var(--card);
+  border: 1px solid var(--stroke); border-radius: 14px; padding: 12px 14px;
+  box-shadow: 0 4px 18px rgba(16,84,49,.06);
+}
+.lbl{ font-size: 12px; text-transform: uppercase; letter-spacing: .8px; color: var(--muted); }
+select{
+  padding: 8px 10px; border: 1px solid var(--stroke); border-radius: 10px; background: #fff;
+  min-width: 220px; font-family: inherit; font-weight: 500;
+}
+details{ margin-left: auto; }
+details summary{ cursor: pointer; font-weight: 600; color: var(--accent); outline: none; }
+.overlay-list{ margin-top: 8px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; }
+.overlay-item{ display: flex; gap: 8px; align-items: center; font-size: 13px; }
+
+#map { width: 100%; height: calc(100% - 220px); border-top: 1px solid var(--stroke); border-bottom: 1px solid var(--stroke); }
+.leaflet-container { background: #eef3f1; }
+
+/* Popup styling */
+.leaflet-popup-content-wrapper{ border-radius: 12px; }
+.leaflet-popup-content{ margin: 8px 10px; }
+.popup h3{ margin: 0 0 6px; font-size: 16px; }
+.popup table{ border-collapse: collapse; font-size: 12px; }
+.popup th, .popup td{ padding: 3px 6px; border-bottom: 1px solid #eee; text-align: right; }
+.popup th{ text-align: left; color: var(--muted); font-weight: 600; }
+.popup .group{ margin-top: 6px; font-weight: 700; }

@@ -1,0 +1,62 @@
+[
+  {
+    "id": "vermindering",
+    "title": "Vermindering",
+    "url": "./overlays/vermindering.png",
+    "bounds": [
+      [
+        50.75,
+        3.2
+      ],
+      [
+        53.7,
+        7.3
+      ]
+    ]
+  },
+  {
+    "id": "substitutie",
+    "title": "Substitutie",
+    "url": "./overlays/substitutie.png",
+    "bounds": [
+      [
+        50.75,
+        3.2
+      ],
+      [
+        53.7,
+        7.3
+      ]
+    ]
+  },
+  {
+    "id": "levensduurverlenging",
+    "title": "Levensduurverlenging",
+    "url": "./overlays/levensduurverlenging.png",
+    "bounds": [
+      [
+        50.75,
+        3.2
+      ],
+      [
+        53.7,
+        7.3
+      ]
+    ]
+  },
+  {
+    "id": "hoogwaardige_verwerking",
+    "title": "Hoogwaardige verwerking",
+    "url": "./overlays/hoogwaardige_verwerking.png",
+    "bounds": [
+      [
+        50.75,
+        3.2
+      ],
+      [
+        53.7,
+        7.3
+      ]
+    ]
+  }
+]
