@@ -1,4 +1,4 @@
-// v2: static map, name normalization, overlays on top, thicker borders
+// v3: static map, Friesland fix, overlays exact op NL-bbox, dikkere borders
 const map = L.map('map', {
   zoomControl: false,
   scrollWheelZoom: false,
@@ -9,29 +9,22 @@ const map = L.map('map', {
   touchZoom: false
 }).setView([52.2, 5.3], 7);
 
-// ⬇︎ Wil je tóch een hele lichte basemap? laat deze regel staan.
-// Wil je helemaal zonder basemap (strakker)? Zet deze 3 regels uit.
-/*
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; OpenStreetMap contributors, © CARTO'
-}).addTo(map);
-*/
-
 let provincesLayer;
 let dataByProv = new Map();
-let dataByProvNorm = new Map();   // genormaliseerde sleutel
+let dataByProvNorm = new Map();
 let groups = {};
 let currentGroup = null;
 let currentMetric = null;
 let activeOverlays = [];
+let nlBounds = null; // ⬅ hier slaan we straks de NL-bounds op
 
-// helper: normaliseer namen (lowercase, accenten weg, koppeltekens = spatie)
+// helper: normaliseer namen
 const norm = s => String(s || '')
   .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
   .replace(/-/g, ' ')
   .trim().toLowerCase();
 
-// aliasmapping op genormaliseerde sleutel
+// aliasmapping
 const alias = new Map([
   ['fryslan', 'friesland'],
   ['brabant', 'noord brabant']
@@ -95,7 +88,7 @@ function populateMetricSelect(){
 }
 
 function kiaGreen(val, min, max){
-  if (val == null || isNaN(val)) return '#eef3f1'; // heel licht
+  if (val == null || isNaN(val)) return '#eef3f1';
   const t = (val - min) / (max - min || 1);
   const r = Math.round(246 + t * (14 - 246));
   const g = Math.round(251 + t * (87 - 251));
@@ -106,21 +99,19 @@ function kiaGreen(val, min, max){
 function numberOrDash(v){ return (v==null || isNaN(v)) ? '–' : Number(v).toLocaleString('nl-NL'); }
 
 function rowForProv(nameRaw){
-  // 1) directe match (exacte sleutel zoals in CSV)
   if (dataByProv.has(nameRaw)) return dataByProv.get(nameRaw);
 
-  // 2) genormaliseerde match (accents eraf, lower, koppeltekens -> spatie)
-  const n = norm(nameRaw);
+  let n = norm(nameRaw);
   if (dataByProvNorm.get(n)) return dataByProvNorm.get(n);
 
-  // 3) alias vooruit: bv. "fryslan" -> "friesland"
   const fwd = alias.get(n);
   if (fwd && dataByProvNorm.get(fwd)) return dataByProvNorm.get(fwd);
 
-  // 4) alias achteruit: zoek alias die naar onze genormaliseerde naam wijst
   for (const [src, dst] of alias.entries()){
     if (dst === n && dataByProvNorm.get(src)) return dataByProvNorm.get(src);
   }
+
+  console.warn('Geen match voor provincie:', nameRaw, '| norm:', n);
   return null;
 }
 
@@ -151,9 +142,9 @@ function updateChoropleth(){
     const val = row ? Number(row[currentMetric]) : null;
     layer.setStyle({
       fillColor: kiaGreen(val, min, max),
-      weight: 2.5,               // dikkere lijn
-      color: '#2e4039',          // iets donkerder groen/grijs
-      fillOpacity: 0.45,         // lager zodat overlays zichtbaar zijn
+      weight: 2.5,
+      color: '#2e4039',
+      fillOpacity: 0.45,
       opacity: 1
     });
     attachPopup(layer, row ? (row['Provincie'] || raw) : raw);
@@ -166,7 +157,7 @@ function loadOverlays(){
     .then(items => {
       const list = document.getElementById('overlayList');
       list.innerHTML='';
-      // Opacity slider
+
       const sliderWrap = document.createElement('div');
       sliderWrap.style.margin = '6px 0';
       sliderWrap.innerHTML = `
@@ -182,9 +173,14 @@ function loadOverlays(){
         const cb = document.createElement('input'); cb.type = 'checkbox'; cb.value = item.id;
         cb.addEventListener('change', e => {
           if (e.target.checked){
-            const img = L.imageOverlay(item.url, item.bounds, { opacity: .85 });
+            const boundsForImg = nlBounds || item.bounds;
+            const img = L.imageOverlay(item.url, boundsForImg, {
+              opacity: .85,
+              interactive: false,
+              className: 'hotspot-overlay'
+            });
             img.addTo(map);
-            if (img.bringToFront) img.bringToFront(); // ⬅︎ boven de provincies
+            if (img.bringToFront) img.bringToFront();
             activeOverlays.push({id:item.id, layer:img});
           } else {
             const i = activeOverlays.findIndex(o => o.id===item.id);
@@ -199,7 +195,7 @@ function loadOverlays(){
         list.innerHTML = '<em>Geen overlays gevonden. Voeg <code>data/overlays/index.json</code> toe.</em>';
       }
     })
-    .catch(()=>{/* stil als ontbreekt */});
+    .catch(()=>{});
 }
 
 async function init(){
@@ -212,7 +208,8 @@ async function init(){
       provincesLayer = L.geoJSON(geojson, {
         style: { color: '#2e4039', weight: 2.5, fillOpacity: 0.45 }
       }).addTo(map);
-      map.fitBounds(provincesLayer.getBounds(), { padding: [12,12] });
+      nlBounds = provincesLayer.getBounds(); // ⬅ sla bbox op
+      map.fitBounds(nlBounds, { padding: [12,12] });
       updateChoropleth();
     })
     .catch(() => alert('Kon nl_provinces.geojson niet laden.'));
