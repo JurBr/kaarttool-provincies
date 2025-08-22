@@ -19,7 +19,7 @@ const aliases = new Map([
 
 function loadCSV() {
   return new Promise((resolve) => {
-    Papa.parse('./data/provincies_circulaire_dataset.csv', {
+    Papa.parse('provincies_circulaire_dataset.csv', {
       header: true, download: true, dynamicTyping: true,
       complete: (results) => {
         results.data.forEach(row => {
